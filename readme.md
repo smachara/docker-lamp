@@ -1,6 +1,5 @@
 # Containerized PHP Application
 
-
 ## What is this?
 
 Quickly get up and running with Docker to develop a PHP application. 
@@ -11,8 +10,8 @@ Quickly get up and running with Docker to develop a PHP application.
 
 ```bash
 # Get shipping-docker files
-git clone https://github.com/shipping-docker/php-app.git
-cd php-app
+git clone https://github.com/smachara/docker-lamp.git
+cd docker-lamp
 
 # Start the app, run containers
 #   in the background
@@ -21,7 +20,7 @@ cd php-app
 docker-compose up -d
 ```
 
-At this point, we've created containers and have them up and running. However, we didn't create a Laravel application to serve yet. We waited because we wanted a PHP image to get created so we can re-use it and run `composer` commands.
+At this point, we've created containers and have them up and running. However, we didn't create a Synfony application to serve yet. 
 
 ### 2. Create a new Synfony application
 
@@ -64,33 +63,10 @@ REDIS_PORT=6379
 > 
 > If you edit the `docker-compose.yml` file, run `docker-compose down; docker-compose up -d` to suck in the new Volume settings.
 
-**NOTE**: If you're not running Docker Mac/Windows (which run Docker in a small virtualized layer), you may need to set permissions on the shared directories that Laravel needs to write to. The following will let Laravel write the storage and bootstrap directories:
+**NOTE**: If you're not running Docker Mac/Windows (which run Docker in a small virtualized layer), you may need to set permissions on the shared directories that Synfony needs to write to. The following will let Synfony write the cache and logs directories:
 
 ```bash
 # From directory php-app
-chmod -R o+rw application/bootstrap application/storage
+chmod -R o+rw application/var/cache application/var/logs
 ```
-
-### 3. (Optionally) Add Auth Scaffolding:
-
-If you'd like, we can add Laravel's Auth scaffolding as well. To do that, we need to run some Artisan commands:
-
-```bash
-# Scaffold authentication views/routes
-docker run -it --rm \
-    -v $(pwd)/application:/opt \
-    -w /opt \
-    --network=phpapp_appnet \
-    shippingdocker/php \
-    php artisan make:auth
-
-# Run migrations for auth scaffolding
-docker run -it --rm \
-    -v $(pwd)/application:/opt \
-    -w /opt \
-    --network=phpapp_appnet \
-    shippingdocker/php \
-    php artisan migrate
-```
-
 Now we can start using our application! Head to `http://localhost/` to see your Synfony application.
